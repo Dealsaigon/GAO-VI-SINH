@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-$queryString = $_SERVER['QUERY_STRING'] ?? '';
-$target = '../index.php' . ($queryString !== '' ? '?' . $queryString : '');
+require_once __DIR__ . '/../app/frontend.php';
 
-header('Location: ' . $target, true, 301);
-exit;
+render_frontend('assets/style.css', '../admin/login.php');
