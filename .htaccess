@@ -1,6 +1,12 @@
 DirectoryIndex index.php index.html
 AddDefaultCharset UTF-8
 
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{THE_REQUEST} \s/+index\.php[?\s] [NC]
+    RewriteRule ^index\.php$ / [R=301,L]
+</IfModule>
+
 <IfModule mod_mime.c>
     AddCharset UTF-8 .html .htm .css .js .json
 </IfModule>

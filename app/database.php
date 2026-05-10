@@ -31,6 +31,8 @@ function db()
     }
 
     $pdo = new PDO($dsn, $db['user'], $db['pass'], $options);
+    $pdo->exec(sprintf('SET NAMES %s COLLATE utf8mb4_unicode_ci', $db['charset']));
+    $pdo->exec(sprintf('SET CHARACTER SET %s', $db['charset']));
 
     return $pdo;
 }

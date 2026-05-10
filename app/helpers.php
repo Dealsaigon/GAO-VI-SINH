@@ -26,10 +26,55 @@ function app_config($key = null)
     return $key === null ? $config : ($config[$key] ?? null);
 }
 
+
+function repair_vietnamese_text(string $text): string
+{
+    $replacements = [
+        'G?o' => 'Gạo',
+        'g?o' => 'gạo',
+        'L?t' => 'Lứt',
+        'l?t' => 'lứt',
+        '?n lành' => 'Ăn lành',
+        '?n s?ch' => 'Ăn sạch',
+        'Bán ch?y' => 'Bán chạy',
+        'Th?m nh?' => 'Thơm nhẹ',
+        'S?n ph?m' => 'Sản phẩm',
+        's?n ph?m' => 'sản phẩm',
+        'Qu?n tr?' => 'Quản trị',
+        'qu?n tr?' => 'quản trị',
+        'T?ng quan' => 'Tổng quan',
+        'C?u hình' => 'Cấu hình',
+        'Bài vi?t' => 'Bài viết',
+        'Ðon hàng' => 'Đơn hàng',
+        'Đon hàng' => 'Đơn hàng',
+        '?ơn hàng' => 'Đơn hàng',
+        'D? li?u' => 'Dữ liệu',
+        'd? li?u' => 'dữ liệu',
+        'truy xu?t' => 'truy xuất',
+        'Truy xu?t' => 'Truy xuất',
+        'ngu?n g?c' => 'nguồn gốc',
+        'Ngu?n g?c' => 'Nguồn gốc',
+        'Liên h?' => 'Liên hệ',
+        'liên h?' => 'liên hệ',
+        'M?t kh?u' => 'Mật khẩu',
+        'm?t kh?u' => 'mật khẩu',
+        'Không dúng' => 'Không đúng',
+        'không dúng' => 'không đúng',
+        'Sóc Tr?ng' => 'Sóc Trăng',
+        'S?c Tr?ng' => 'Sóc Trăng',
+        'Ðông Xuân' => 'Đông Xuân',
+        'Đông Xuân' => 'Đông Xuân',
+        'H?p tác xã' => 'Hợp tác xã',
+        'h?p tác xã' => 'hợp tác xã',
+    ];
+
+    return strtr($text, $replacements);
+}
+
 function scalar_input($value, string $default = ''): string
 {
     if (is_scalar($value)) {
-        return trim((string) $value);
+        return repair_vietnamese_text(trim((string) $value));
     }
 
     return $default;
@@ -45,7 +90,9 @@ function e($value): string
         return '';
     }
 
-    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    $text = repair_vietnamese_text((string) $value);
+
+    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
 function money_vnd($amount): string
