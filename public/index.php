@@ -131,6 +131,6 @@ $pageTitle = $settings['site_title'] ?? 'Gạo Vi Sinh';
         </section>
     </main>
 
-    <footer class="site-footer">© <?= date('Y') ?> Gạo Vi Sinh. Vận hành bằng PHP & MySQL.</footer>
+    <footer class="site-footer">© <?= date('Y') ?> Gạo Vi Sinh.</footer>
 </body>
 </html>
