@@ -8,6 +8,7 @@ CREATE TABLE admins (
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(50) NOT NULL DEFAULT 'manager',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB;
 
 CREATE TABLE products (
@@ -24,6 +25,7 @@ CREATE TABLE products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_products_active_sort (is_active, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB;
 
 CREATE TABLE posts (
@@ -37,6 +39,7 @@ CREATE TABLE posts (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_posts_status_published (status, published_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB;
 
 CREATE TABLE orders (
@@ -52,6 +55,7 @@ CREATE TABLE orders (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_orders_status_created (status, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB;
 
 CREATE TABLE trace_batches (
@@ -66,11 +70,13 @@ CREATE TABLE trace_batches (
     packed_at DATE DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_trace_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB;
 
 CREATE TABLE settings (
     setting_key VARCHAR(120) PRIMARY KEY,
     setting_value TEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB;
 
 INSERT INTO admins (name, email, password_hash, role) VALUES
@@ -95,6 +101,8 @@ INSERT INTO orders (customer_name, phone, email, address, items_summary, total_a
 ON DUPLICATE KEY UPDATE status = VALUES(status);
 
 INSERT INTO trace_batches (batch_code, product_id, farm_name, province, season, cultivation_log, certificate_url, packed_at) VALUES
+('GVS-2026-ST25-001', (SELECT id FROM products WHERE slug = 'gao-st25-vi-sinh' LIMIT 1), 'Hợp tác xã Lúa Xanh', 'Sóc Trăng', 'Đông Xuân 2026', JSON_OBJECT('method', 'Vi sinh', 'water', 'Tưới ướt khô xen kẽ'), 'https://example.com/certificates/gvs-2026-st25-001.pdf', '2026-04-25')
+ON DUPLICATE KEY UPDATE product_id = VALUES(product_id), packed_at = VALUES(packed_at);
 ('GVS-2026-ST25-001', 1, 'Hợp tác xã Lúa Xanh', 'Sóc Trăng', 'Đông Xuân 2026', JSON_OBJECT('method', 'Vi sinh', 'water', 'Tưới ướt khô xen kẽ'), 'https://example.com/certificates/gvs-2026-st25-001.pdf', '2026-04-25')
 ON DUPLICATE KEY UPDATE packed_at = VALUES(packed_at);
 

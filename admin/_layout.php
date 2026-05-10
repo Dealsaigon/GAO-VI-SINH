@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 function admin_header(string $title, array $admin): void
 {
+    send_utf8_header();
     ?>
     <!doctype html>
     <html lang="vi">
@@ -23,7 +24,7 @@ function admin_header(string $title, array $admin): void
             <a href="orders.php">Đơn hàng</a>
             <a href="posts.php">Bài viết</a>
             <a href="settings.php">Cấu hình</a>
-            <a href="../public/index.php">Xem website</a>
+            <a href="../index.php">Xem website</a>
             <a href="logout.php">Đăng xuất</a>
         </aside>
         <main class="admin-main">

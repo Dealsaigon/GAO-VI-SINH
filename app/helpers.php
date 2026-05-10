@@ -2,7 +2,21 @@
 
 declare(strict_types=1);
 
-function app_config(string $key = null): mixed
+
+ini_set('default_charset', 'UTF-8');
+
+if (function_exists('mb_internal_encoding')) {
+    mb_internal_encoding('UTF-8');
+}
+
+function send_utf8_header(): void
+{
+    if (!headers_sent()) {
+        header('Content-Type: text/html; charset=UTF-8');
+    }
+}
+
+function app_config(?string $key = null): mixed
 {
     static $config = null;
     $config ??= require __DIR__ . '/config.php';
@@ -10,9 +24,26 @@ function app_config(string $key = null): mixed
     return $key === null ? $config : ($config[$key] ?? null);
 }
 
-function e(?string $value): string
+function scalar_input(mixed $value, string $default = ''): string
 {
-    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+    if (is_scalar($value)) {
+        return trim((string) $value);
+    }
+
+    return $default;
+}
+
+function e(mixed $value): string
+{
+    if ($value === null) {
+        return '';
+    }
+
+    if (!is_scalar($value)) {
+        return '';
+    }
+
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 
 function money_vnd(int|float $amount): string
@@ -23,7 +54,13 @@ function money_vnd(int|float $amount): string
 function url(string $path = ''): string
 {
     $base = rtrim((string) app_config('base_url'), '/');
-    return $base . '/' . ltrim($path, '/');
+    $path = ltrim($path, '/');
+
+    if ($base === '') {
+        return '/' . $path;
+    }
+
+    return $base . '/' . $path;
 }
 
 function redirect(string $path): never

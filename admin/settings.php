@@ -12,7 +12,7 @@ verify_csrf();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = db()->prepare('INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)');
     foreach (['site_title', 'site_description', 'hotline', 'email'] as $key) {
-        $stmt->execute([$key, trim((string) ($_POST[$key] ?? ''))]);
+        $stmt->execute([$key, scalar_input($_POST[$key] ?? '')]);
     }
     redirect('admin/settings.php');
 }

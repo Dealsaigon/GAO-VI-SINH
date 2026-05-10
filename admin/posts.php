@@ -17,12 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $data = [
-        trim((string) $_POST['title']),
-        slugify((string) $_POST['title']),
-        trim((string) $_POST['excerpt']),
-        trim((string) $_POST['content']),
-        (string) $_POST['status'],
-        $_POST['published_at'] ?: date('Y-m-d H:i:s'),
+        scalar_input($_POST['title'] ?? ''),
+        slugify(scalar_input($_POST['title'] ?? '')),
+        scalar_input($_POST['excerpt'] ?? ''),
+        scalar_input($_POST['content'] ?? ''),
+        scalar_input($_POST['status'] ?? 'draft'),
+        scalar_input($_POST['published_at'] ?? '') ?: date('Y-m-d H:i:s'),
     ];
 
     if ($id > 0) {

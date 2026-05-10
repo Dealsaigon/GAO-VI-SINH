@@ -10,22 +10,28 @@ verify_csrf();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int) ($_POST['id'] ?? 0);
-    $data = [
-        trim((string) $_POST['name']),
-        slugify((string) $_POST['name']),
-        trim((string) $_POST['badge']),
-        trim((string) $_POST['description']),
-        (int) $_POST['price'],
-        trim((string) $_POST['weight']),
-        trim((string) $_POST['image_url']),
-        isset($_POST['is_active']) ? 1 : 0,
-        (int) $_POST['sort_order'],
-    ];
+    $action = scalar_input($_POST['action'] ?? 'save');
 
-    if (($_POST['action'] ?? '') === 'delete' && $id > 0) {
+    if ($action === 'delete' && $id > 0) {
         $stmt = db()->prepare('DELETE FROM products WHERE id = ?');
         $stmt->execute([$id]);
-    } elseif ($id > 0) {
+        redirect('admin/products.php');
+    }
+
+    $name = scalar_input($_POST['name'] ?? '');
+    $data = [
+        $name,
+        slugify($name),
+        scalar_input($_POST['badge'] ?? ''),
+        scalar_input($_POST['description'] ?? ''),
+        max(0, (int) ($_POST['price'] ?? 0)),
+        scalar_input($_POST['weight'] ?? '5kg'),
+        scalar_input($_POST['image_url'] ?? ''),
+        isset($_POST['is_active']) ? 1 : 0,
+        (int) ($_POST['sort_order'] ?? 0),
+    ];
+
+    if ($id > 0) {
         $stmt = db()->prepare('UPDATE products SET name=?, slug=?, badge=?, description=?, price=?, weight=?, image_url=?, is_active=?, sort_order=? WHERE id=?');
         $stmt->execute([...$data, $id]);
     } else {

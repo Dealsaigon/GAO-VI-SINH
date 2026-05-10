@@ -10,7 +10,7 @@ verify_csrf();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = db()->prepare('UPDATE orders SET status = ?, note = ? WHERE id = ?');
-    $stmt->execute([(string) $_POST['status'], (string) $_POST['note'], (int) $_POST['id']]);
+    $stmt->execute([scalar_input($_POST['status'] ?? 'new'), scalar_input($_POST['note'] ?? ''), (int) ($_POST['id'] ?? 0)]);
     redirect('admin/orders.php');
 }
 

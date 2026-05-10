@@ -2,16 +2,19 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../app/frontend.php';
+require_once __DIR__ . '/repository.php';
 
-render_frontend('assets/style.css', '../admin/login.php');
-require_once __DIR__ . '/../app/repository.php';
+function render_frontend(string $assetPath, string $adminPath): void
+{
+    send_utf8_header();
 
-$products = featured_products();
-$posts = published_posts();
-$settings = site_settings();
-$pageTitle = $settings['site_title'] ?? 'Gạo Vi Sinh';
-?>
+    $products = featured_products();
+    $posts = published_posts();
+    $settings = site_settings();
+    $batchCode = scalar_input($_GET['batch'] ?? '');
+    $traceBatch = find_trace_batch($batchCode);
+    $pageTitle = $settings['site_title'] ?? 'Gạo Vi Sinh';
+    ?>
 <!doctype html>
 <html lang="vi">
 <head>
@@ -19,7 +22,7 @@ $pageTitle = $settings['site_title'] ?? 'Gạo Vi Sinh';
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($pageTitle) ?></title>
     <meta name="description" content="<?= e($settings['site_description'] ?? 'Gạo sạch vi sinh, truy xuất nguồn gốc và giảm phát thải carbon.') ?>">
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="<?= e($assetPath) ?>">
 </head>
 <body>
     <header class="site-header">
@@ -29,7 +32,7 @@ $pageTitle = $settings['site_title'] ?? 'Gạo Vi Sinh';
             <a href="#process">Quy trình</a>
             <a href="#trace">Truy xuất</a>
             <a href="#contact">Liên hệ</a>
-            <a class="admin-link" href="../admin/login.php">Quản trị</a>
+            <a class="admin-link" href="<?= e($adminPath) ?>">Quản trị</a>
         </nav>
     </header>
 
@@ -99,10 +102,23 @@ $pageTitle = $settings['site_title'] ?? 'Gạo Vi Sinh';
                 <h2>Nhập mã lô để kiểm tra</h2>
                 <p>Module tra cứu đã sẵn sàng kết nối bảng <code>trace_batches</code> trong cơ sở dữ liệu để hiển thị vùng trồng, mùa vụ và chứng nhận.</p>
             </div>
-            <form class="trace-form" method="get" action="#trace">
-                <input name="batch" placeholder="VD: GVS-2026-ST25-001" value="<?= e($_GET['batch'] ?? '') ?>">
-                <button type="submit">Tra cứu</button>
-            </form>
+            <div>
+                <form class="trace-form" method="get" action="#trace">
+                    <input name="batch" placeholder="VD: GVS-2026-ST25-001" value="<?= e($batchCode) ?>">
+                    <button type="submit">Tra cứu</button>
+                </form>
+                <?php if ($batchCode !== ''): ?>
+                    <?php if ($traceBatch): ?>
+                        <div class="trace-result">
+                            <strong><?= e($traceBatch['batch_code']) ?> • <?= e($traceBatch['product_name']) ?></strong>
+                            <span>Vùng trồng: <?= e($traceBatch['farm_name']) ?>, <?= e($traceBatch['province']) ?></span>
+                            <span>Mùa vụ: <?= e($traceBatch['season']) ?> • Đóng gói: <?= e($traceBatch['packed_at']) ?></span>
+                        </div>
+                    <?php else: ?>
+                        <p class="trace-result is-warning">Chưa tìm thấy mã lô này. Vui lòng kiểm tra lại mã trên bao bì hoặc liên hệ hotline.</p>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
         </section>
 
         <section class="section">
@@ -134,3 +150,6 @@ $pageTitle = $settings['site_title'] ?? 'Gạo Vi Sinh';
     <footer class="site-footer">© <?= date('Y') ?> Gạo Vi Sinh. Vận hành bằng PHP & MySQL.</footer>
 </body>
 </html>
+
+    <?php
+}

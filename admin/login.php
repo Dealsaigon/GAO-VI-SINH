@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../app/auth.php';
 
+send_utf8_header();
+
 if (current_admin() !== null) {
     redirect('admin/index.php');
 }
@@ -11,8 +13,8 @@ if (current_admin() !== null) {
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
-    $email = trim((string) ($_POST['email'] ?? ''));
-    $password = (string) ($_POST['password'] ?? '');
+    $email = scalar_input($_POST['email'] ?? '');
+    $password = scalar_input($_POST['password'] ?? '');
 
     if (attempt_login($email, $password)) {
         redirect('admin/index.php');

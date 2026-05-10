@@ -259,6 +259,31 @@ h2 {
     padding: 15px 18px;
 }
 
+
+.trace-result {
+    display: grid;
+    gap: 6px;
+    margin-top: 14px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: white;
+    color: var(--muted);
+    padding: 14px 16px;
+}
+
+.trace-result strong {
+    color: var(--green-dark);
+}
+
+.trace-result span {
+    display: block;
+}
+
+.trace-result.is-warning {
+    border-color: #fed7aa;
+    color: #9a3412;
+}
+
 .post-card { padding: 24px; }
 .post-card p { color: var(--green); font-weight: 900; margin-bottom: 10px; }
 
