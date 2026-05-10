@@ -8,7 +8,7 @@ CREATE TABLE admins (
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(50) NOT NULL DEFAULT 'manager',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE products (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -24,7 +24,7 @@ CREATE TABLE products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_products_active_sort (is_active, sort_order)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE posts (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -37,7 +37,7 @@ CREATE TABLE posts (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_posts_status_published (status, published_at)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE orders (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -52,7 +52,7 @@ CREATE TABLE orders (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_orders_status_created (status, created_at)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE trace_batches (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -66,12 +66,12 @@ CREATE TABLE trace_batches (
     packed_at DATE DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_trace_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE settings (
     setting_key VARCHAR(120) PRIMARY KEY,
     setting_value TEXT NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO admins (name, email, password_hash, role) VALUES
 ('Quản trị viên', 'admin@gaovisinh.vn', '$2y$12$DxEkwFyQzxYPJtYCHe0D2eQIbOwtoFLQLzP0HNaxon5LZmzBCzIDS', 'admin')

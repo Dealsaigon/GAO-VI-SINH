@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../app/auth.php';
 
+send_utf8_header();
+
 if (current_admin() !== null) {
     redirect('admin/index.php');
 }

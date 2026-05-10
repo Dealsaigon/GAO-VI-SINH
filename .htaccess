@@ -1,0 +1,7 @@
+DirectoryIndex index.php index.html
+AddDefaultCharset UTF-8
+
+<IfModule mod_mime.c>
+    AddType 'text/html; charset=UTF-8' .html .htm .php
+    AddCharset UTF-8 .html .htm .php .css .js .json
+</IfModule>
